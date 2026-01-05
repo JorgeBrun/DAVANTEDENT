@@ -28,23 +28,24 @@ const formCita = document.getElementById("formCita");
 
 
 /* ================= COOKIES ================= */
+/* ================= PERSISTENCIA (localStorage) ================= */
 function guardarCookies() {
-    const fecha = new Date();
-    fecha.setFullYear(fecha.getFullYear() + 1);
-    document.cookie =
-        "citas=" +
-        encodeURIComponent(JSON.stringify(citas)) +
-        ";expires=" +
-        fecha.toUTCString() +
-        ";path=/";
+    try {
+        localStorage.setItem('citas', JSON.stringify(citas));
+    } catch (e) {
+        console.error('No se pudo guardar en localStorage', e);
+    }
 }
 
 function cargarCookies() {
-    const cookie = document.cookie
-        .split("; ")
-        .find(c => c.startsWith("citas="));
-    if (cookie) {
-        citas = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
+    try {
+        const data = localStorage.getItem('citas');
+        if (data) {
+            citas = JSON.parse(data);
+        }
+    } catch (e) {
+        console.error('No se pudo cargar citas de localStorage', e);
+        citas = [];
     }
 }
 
@@ -134,7 +135,7 @@ function mostrarCitas() {
     tbody.innerHTML = "";
 
     if (citas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10">dato vacío</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10">No hay citas registradas</td></tr>`;
         return;
     }
 

@@ -23,7 +23,7 @@ python3 -m http.server 8000 --directory src
 
 ## Notas para desarrolladores
 - La app es una SPA simple: el formulario `#formCita` crea instancias de `Cita` y las guarda en el arreglo `citas`.
-- Persistencia: `guardarCookies()` / `cargarCookies()` serializan `citas` a JSON en una cookie llamada `citas`.
+- Persistencia: `guardarCookies()` / `cargarCookies()` serializan `citas` a JSON en `localStorage` (clave `citas`).
 - Identificadores: el `id` de una cita se genera con `Date.now().toString()` y se usa para editar/eliminar.
 - Variables DOM: el código ha sido refactorizado para usar referencias DOM explícitas en `src/script.js` en lugar de depender de variables globales creadas por elementos con `id`.
 
