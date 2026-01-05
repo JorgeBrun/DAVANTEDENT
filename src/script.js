@@ -14,6 +14,19 @@ class Cita {
 
 let citas = [];
 
+/* ================= DOM REFERENCES (avoid globals) ================= */
+const idCita = document.getElementById("idCita");
+const nombre = document.getElementById("nombre");
+const apellidos = document.getElementById("apellidos");
+const dni = document.getElementById("dni");
+const telefono = document.getElementById("telefono");
+const nacimiento = document.getElementById("nacimiento");
+const fechaCita = document.getElementById("fechaCita");
+const horaCita = document.getElementById("horaCita");
+const observaciones = document.getElementById("observaciones");
+const formCita = document.getElementById("formCita");
+
+
 /* ================= COOKIES ================= */
 function guardarCookies() {
     const fecha = new Date();
@@ -147,7 +160,7 @@ function mostrarCitas() {
 }
 
 /* ================= EVENTOS ================= */
-document.getElementById("formCita").addEventListener("submit", function (e) {
+formCita.addEventListener("submit", function (e) {
     e.preventDefault();
 
     if (!validarFormulario()) return;
