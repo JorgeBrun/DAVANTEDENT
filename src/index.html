@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>DavanteDent - Gestión de Citas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <img src="assets/logo.png" alt="Logo DavanteDent">
+    <h1>Clínica Dental DavanteDent</h1>
+</header>
+
+<main>
+    <h2>Gestión de citas</h2>
+
+    <form id="formCita">
+        <input type="hidden" id="idCita">
+
+        <label for="nombre">Nombre *</label>
+        <input type="text" id="nombre" required>
+
+        <label for="apellidos">Apellidos *</label>
+        <input type="text" id="apellidos" required>
+
+        <label for="dni">DNI (8 números y letra mayúscula) *</label>
+        <input type="text" id="dni" placeholder="12345678A" required>
+
+        <label for="telefono">Teléfono (9 dígitos) *</label>
+        <input type="text" id="telefono" placeholder="600123456" required>
+
+        <label for="nacimiento">
+            Fecha de nacimiento *
+            <small>(Debe ser mayor de 18 años)</small>
+        </label>
+        <input type="date" id="nacimiento" required>
+
+        <label for="fechaCita">Fecha de la cita *</label>
+        <input type="date" id="fechaCita" required>
+
+        <label for="horaCita">Hora de la cita *</label>
+        <input type="time" id="horaCita" required>
+
+        <label for="observaciones">Observaciones</label>
+        <textarea id="observaciones"></textarea>
+
+        <p id="error" style="color:red;"></p>
+
+        <button type="submit">Guardar cita</button>
+    </form>
+
+    <h2>Listado de citas</h2>
+
+    <table id="tablaCitas">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>DNI</th>
+                <th>Teléfono</th>
+                <th>Fecha nacimiento</th>
+                <th>Fecha cita</th>
+                <th>Hora</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</main>
+
+<footer>
+    <p>© 2025 DavanteDent - Gestión de citas</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
