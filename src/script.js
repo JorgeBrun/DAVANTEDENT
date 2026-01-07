@@ -14,38 +14,24 @@ class Cita {
 
 let citas = [];
 
-/* ================= DOM REFERENCES (avoid globals) ================= */
-const idCita = document.getElementById("idCita");
-const nombre = document.getElementById("nombre");
-const apellidos = document.getElementById("apellidos");
-const dni = document.getElementById("dni");
-const telefono = document.getElementById("telefono");
-const nacimiento = document.getElementById("nacimiento");
-const fechaCita = document.getElementById("fechaCita");
-const horaCita = document.getElementById("horaCita");
-const observaciones = document.getElementById("observaciones");
-const formCita = document.getElementById("formCita");
-
-
 /* ================= COOKIES ================= */
-/* ================= PERSISTENCIA (localStorage) ================= */
 function guardarCookies() {
-    try {
-        localStorage.setItem('citas', JSON.stringify(citas));
-    } catch (e) {
-        console.error('No se pudo guardar en localStorage', e);
-    }
+    const fecha = new Date();
+    fecha.setFullYear(fecha.getFullYear() + 1);
+    document.cookie =
+        "citas=" +
+        encodeURIComponent(JSON.stringify(citas)) +
+        ";expires=" +
+        fecha.toUTCString() +
+        ";path=/";
 }
 
 function cargarCookies() {
-    try {
-        const data = localStorage.getItem('citas');
-        if (data) {
-            citas = JSON.parse(data);
-        }
-    } catch (e) {
-        console.error('No se pudo cargar citas de localStorage', e);
-        citas = [];
+    const cookie = document.cookie
+        .split("; ")
+        .find(c => c.startsWith("citas="));
+    if (cookie) {
+        citas = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
     }
 }
 
@@ -69,55 +55,38 @@ function validarFormulario() {
         valido = false;
     }
 
-    /* DNI: 8 números + 1 letra MAYÚSCULA */
-    const dniValor = dni.value.trim();
-    const dniRegex = /^[0-9]{8}[A-Z]$/;
-    if (!dniRegex.test(dniValor)) {
-        marcarError(dni, "El DNI debe tener 8 números y una letra mayúscula");
+    if (!/^[0-9]{8}[A-Z]$/.test(dni.value.trim())) {
+        marcarError(dni, "DNI incorrecto");
         valido = false;
     }
 
-    /* TELÉFONO: EXACTAMENTE 9 DÍGITOS */
-    const telefonoValor = telefono.value.trim();
-    const telefonoRegex = /^[0-9]{9}$/;
-    if (!telefonoRegex.test(telefonoValor)) {
-        marcarError(telefono, "El teléfono debe tener exactamente 9 dígitos");
+    if (!/^[0-9]{9}$/.test(telefono.value.trim())) {
+        marcarError(telefono, "Teléfono incorrecto");
         valido = false;
     }
 
-    /* FECHA NACIMIENTO: MAYOR DE 18 Y NO FUTURA */
     if (nacimiento.value === "") {
-        marcarError(nacimiento, "La fecha de nacimiento es obligatoria");
+        marcarError(nacimiento, "Fecha de nacimiento obligatoria");
         valido = false;
     } else {
-        const fechaNacimiento = new Date(nacimiento.value);
+        const nac = new Date(nacimiento.value);
         const hoy = new Date();
-
-        if (fechaNacimiento >= hoy) {
-            marcarError(nacimiento, "La fecha de nacimiento no puede ser futura");
+        let edad = hoy.getFullYear() - nac.getFullYear();
+        const m = hoy.getMonth() - nac.getMonth();
+        if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+        if (edad < 18) {
+            marcarError(nacimiento, "Debe ser mayor de edad");
             valido = false;
-        } else {
-            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-            const m = hoy.getMonth() - fechaNacimiento.getMonth();
-
-            if (m < 0 || (m === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
-                edad--;
-            }
-
-            if (edad < 18) {
-                marcarError(nacimiento, "El paciente debe tener al menos 18 años");
-                valido = false;
-            }
         }
     }
 
     if (fechaCita.value === "") {
-        marcarError(fechaCita, "La fecha de la cita es obligatoria");
+        marcarError(fechaCita, "Fecha de cita obligatoria");
         valido = false;
     }
 
     if (horaCita.value === "") {
-        marcarError(horaCita, "La hora de la cita es obligatoria");
+        marcarError(horaCita, "Hora obligatoria");
         valido = false;
     }
 
@@ -135,7 +104,7 @@ function mostrarCitas() {
     tbody.innerHTML = "";
 
     if (citas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10">No hay citas registradas</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10">dato vacío</td></tr>`;
         return;
     }
 
@@ -161,9 +130,8 @@ function mostrarCitas() {
 }
 
 /* ================= EVENTOS ================= */
-formCita.addEventListener("submit", function (e) {
+document.getElementById("formCita").addEventListener("submit", function (e) {
     e.preventDefault();
-
     if (!validarFormulario()) return;
 
     const id = idCita.value || Date.now().toString();
